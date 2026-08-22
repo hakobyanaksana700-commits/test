@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<title>GetCard — раскадровка Reels</title>
+<title>GetCard — продакшн-бриф Reels</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -219,6 +219,53 @@
     .phone{ width: 120px; }
   }
 
+  /* ---------- VO script ---------- */
+  .script{ margin-top: 4.5rem; }
+  .script h2, .shotlist h2, .checklist h2{
+    font-family: var(--font-mono); text-transform:uppercase; letter-spacing:.14em;
+    font-size:.75rem; color: var(--text-faint); font-weight:500; margin: 0 0 1rem;
+  }
+  .script-lines{
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: .4rem 1.8rem;
+  }
+  .script-line{
+    display:grid; grid-template-columns: 84px 1fr; gap: 1.4rem;
+    padding: 1.05rem 0; border-bottom: 1px solid var(--line);
+  }
+  .script-line:last-child{ border-bottom:none; }
+  .script-line .tc{ font-family: var(--font-mono); font-size:.78rem; color: var(--gold); padding-top:.15rem; }
+  .script-line .ln{ font-size: 1rem; color: var(--text); line-height:1.55; }
+  .script-line .ln .tag{ font-family: var(--font-mono); font-size:.62rem; color: var(--text-faint); text-transform:uppercase; letter-spacing:.1em; display:block; margin-bottom:.25rem; }
+
+  /* ---------- Shot list ---------- */
+  .shotlist{ margin-top: 4.5rem; }
+  .shotlist-scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:16px; }
+  table.shots{ width:100%; border-collapse:collapse; min-width: 720px; background: var(--surface); }
+  table.shots th, table.shots td{ text-align:left; padding: .85rem 1.1rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.shots th{ font-family: var(--font-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color: var(--text-faint); font-weight:500; background: var(--bg-2); }
+  table.shots td{ font-size:.86rem; color: var(--text-dim); }
+  table.shots td.tc{ font-family: var(--font-mono); color: var(--gold); white-space:nowrap; }
+  table.shots td.strong{ color: var(--text); font-weight:600; }
+  table.shots tr:last-child td{ border-bottom:none; }
+
+  /* ---------- Checklist ---------- */
+  .checklist{ margin-top: 4.5rem; }
+  .checklist-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap: .7rem 1.6rem; }
+  @media (max-width:720px){ .checklist-grid{ grid-template-columns: 1fr; } }
+  .check-item{ display:flex; gap:.7rem; align-items:flex-start; font-size:.9rem; color: var(--text-dim); }
+  .check-item .box{ flex:none; width:16px; height:16px; margin-top:.15rem; border:1.5px solid var(--gold); border-radius:4px; }
+  .check-item b{ color: var(--text); font-weight:600; }
+
+  .legal{
+    margin-top: 4.5rem; background: var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding: 1.6rem 1.8rem;
+  }
+  .legal h2{ font-family: var(--font-mono); text-transform:uppercase; letter-spacing:.14em; font-size:.75rem; color: var(--text-faint); font-weight:500; margin:0 0 1rem; }
+  .legal ul{ margin:0; padding-left:1.1rem; display:grid; gap:.5rem; }
+  .legal li{ color: var(--text-dim); font-size:.88rem; line-height:1.6; }
+  .legal li b{ color: var(--text); }
+
   /* ---------- Footer sections ---------- */
   .panels{ margin-top: 4.5rem; display:grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
   @media (max-width: 720px){ .panels{ grid-template-columns: 1fr; } }
@@ -252,9 +299,9 @@
 <div class="wrap">
 
   <header>
-    <span class="eyebrow">Reels / TikTok / Shorts · раскадровка</span>
+    <span class="eyebrow">Reels / TikTok / Shorts · продакшн-бриф</span>
     <h1>Отказ платежа как <em>завязка</em> истории</h1>
-    <p class="lede">Полная покадровая раскадровка рекламного ролика GetCard — для утверждения перед продакшеном.</p>
+    <p class="lede">Раскадровка, VO-скрипт, shot-лист и чек-лист поставки для рекламного ролика GetCard — готово к передаче в продакшн или AI-видеосервис.</p>
 
     <div class="thesis">
       <div class="pain">Боль: <b>«не проходит оплата зарубежного сервиса»</b></div>
@@ -471,6 +518,86 @@
 
   </section>
 
+  <section class="script">
+    <h2>Полный VO-скрипт (для дубляжа)</h2>
+    <div class="script-lines">
+      <div class="script-line">
+        <div class="tc">00:00</div>
+        <div class="ln"><span class="tag">Сцена 1 — тон: раздражение, узнавание</span>Пытались оплатить зарубежный сервис российской картой — и снова отказ?</div>
+      </div>
+      <div class="script-line">
+        <div class="tc">00:04</div>
+        <div class="ln"><span class="tag">Сцена 2 — тон: сочувствие</span>Знакомая ситуация: сервис нужен, а оплатить его российской картой не получается.</div>
+      </div>
+      <div class="script-line">
+        <div class="tc">00:09</div>
+        <div class="ln"><span class="tag">Сцена 3 — тон: спокойная уверенность</span>Но есть решение — GetCard.</div>
+      </div>
+      <div class="script-line">
+        <div class="tc">00:13</div>
+        <div class="ln"><span class="tag">Сцена 4 — тон: объясняющий, ровный</span>GetCard — иностранная карта, которую можно использовать для оплаты зарубежных сервисов там, где принимаются такие карты.</div>
+      </div>
+      <div class="script-line">
+        <div class="tc">00:22</div>
+        <div class="ln"><span class="tag">Сцена 5 — тон: лёгкий, уверенный</span>Один инструмент для зарубежных онлайн-платежей.</div>
+      </div>
+      <div class="script-line">
+        <div class="tc">00:28</div>
+        <div class="ln"><span class="tag">Сцена 6 — тон: приглашающий, без давления</span>Если вам нужна иностранная карта для зарубежных платежей — узнайте подробнее о GetCard.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shotlist">
+    <h2>Компактный shot-лист</h2>
+    <div class="shotlist-scroll">
+      <table class="shots">
+        <thead>
+          <tr><th>TC</th><th>Кадр</th><th>Крупность / движение камеры</th><th>Текст в кадре</th><th>Длительность</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="tc">00:00</td><td class="strong">Форма оплаты, палец жмёт «Оплатить»</td><td>Крупный план, лёгкий handheld</td><td>—</td><td>1.5 с</td></tr>
+          <tr><td class="tc">00:01.5</td><td class="strong">Баннер отказа, красная вспышка</td><td>Zoom-in, тряска</td><td>Оплата не прошла</td><td>1.5 с</td></tr>
+          <tr><td class="tc">00:03</td><td class="strong">Заголовок боли на чёрном</td><td>Статика, лёгкий shake</td><td>Снова не проходит оплата?</td><td>1 с</td></tr>
+          <tr><td class="tc">00:04</td><td class="strong">Ноутбук — окно подписки</td><td>Top-down, статика</td><td>Подписка</td><td>1.2 с</td></tr>
+          <tr><td class="tc">00:05.2</td><td class="strong">Смартфон — та же ошибка</td><td>Handheld, snap-cut</td><td>Сервис</td><td>1.2 с</td></tr>
+          <tr><td class="tc">00:06.4</td><td class="strong">Рука откладывает телефон</td><td>Крупный план рук</td><td>Онлайн-покупка</td><td>1.2 с</td></tr>
+          <tr><td class="tc">00:07.6</td><td class="strong">Индикатор загрузки → обрыв</td><td>Macro на экране</td><td>—</td><td>1.4 с</td></tr>
+          <tr><td class="tc">00:09</td><td class="strong">Проявление 3D-карты GetCard</td><td>Slow push-in, parallax</td><td>Есть решение.</td><td>2.5 с</td></tr>
+          <tr><td class="tc">00:11.5</td><td class="strong">Лого-момент карты</td><td>Rotate-in, bloom</td><td>GETCARD</td><td>1.5 с</td></tr>
+          <tr><td class="tc">00:13</td><td class="strong">Motion-схема: ₽ → GetCard → сервис → оплата</td><td>Draw-on анимация, статичная камера</td><td>РУБЛИ / GETCARD / СЕРВИС / ОПЛАТА</td><td>5 с</td></tr>
+          <tr><td class="tc">00:18</td><td class="strong">Смартфон и ноутбук с интерфейсами сервисов</td><td>3D-перспектива, лёгкий блик</td><td>—</td><td>4 с</td></tr>
+          <tr><td class="tc">00:22</td><td class="strong">Карта GetCard крупным планом в руке</td><td>Macro, мягкий параллакс</td><td>Сервисы</td><td>2 с</td></tr>
+          <tr><td class="tc">00:24</td><td class="strong">Смартфон / ноутбук с оплатой</td><td>Быстрые smooth cuts</td><td>Подписки / Онлайн-покупки</td><td>3 с</td></tr>
+          <tr><td class="tc">00:27</td><td class="strong">Жест подтверждения оплаты</td><td>Крупный план, tap</td><td>—</td><td>1 с</td></tr>
+          <tr><td class="tc">00:28</td><td class="strong">Финальный лок-ап: карта вращается</td><td>Slow turntable, held frame</td><td>GETCARD / Иностранная карта для зарубежных платежей / Подробнее →</td><td>7 с</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="checklist">
+    <h2>Чек-лист поставки материалов</h2>
+    <div class="checklist-grid">
+      <div class="check-item"><span class="box"></span><span><b>Видео.</b> MP4, H.264, 1080×1920, 30 fps, 30–35 с, ≤ 30 Мбит/с.</span></div>
+      <div class="check-item"><span class="box"></span><span><b>Аудио.</b> Свод (mix), отдельно VO-дорожка и музыкальная дорожка (stems) для правок.</span></div>
+      <div class="check-item"><span class="box"></span><span><b>Субтитры.</b> Вшитые в кадр + отдельный файл .srt для загрузки в рекламный кабинет.</span></div>
+      <div class="check-item"><span class="box"></span><span><b>Обложка (cover frame).</b> Кадр сцены 6 с картой и лого GetCard, 1080×1920.</span></div>
+      <div class="check-item"><span class="box"></span><span><b>Версия без звука.</b> Для авто-проигрывания без звука в ленте (субтитры обязательны).</span></div>
+      <div class="check-item"><span class="box"></span><span><b>Музыка.</b> Лицензированный трек / royalty-free, права подтверждены для платного продвижения.</span></div>
+    </div>
+  </section>
+
+  <section class="legal">
+    <h2>Комплаенс и юридические оговорки</h2>
+    <ul>
+      <li><b>Формулировка возможностей карты</b> — только «карта, которую можно использовать для оплаты зарубежных сервисов там, где принимаются такие карты». Не «работает везде», не «гарантированно».</li>
+      <li><b>Смысловая рамка</b> — ролик о решении проблемы оплаты зарубежных сервисов, а не о обходе банковских ограничений. Слова «обход», «блокировка», «санкции», «ограничения» не используются нигде в VO, субтитрах и графике.</li>
+      <li><b>Логотипы и реквизиты</b> — на экране только вымышленные номера карт и обобщённые, не брендированные интерфейсы; сторонние логотипы сервисов и платёжных систем не используются.</li>
+      <li><b>Дисклеймер (мелким текстом, финальный кадр)</b> — рекомендуется короткая строка вроде «Условия оформления и обслуживания — на getcard.one» для соответствия рекламным требованиям площадок.</li>
+    </ul>
+  </section>
+
   <section class="panels">
     <div class="panel">
       <h3>Голос и озвучка</h3>
@@ -506,7 +633,7 @@
   </section>
 
   <footer>
-    <div class="note">Раскадровка описывает визуал, текст, озвучку, музыку, звук, переход и анимацию для каждой сцены — готова к согласованию перед продакшеном.</div>
+    <div class="note">Бриф включает раскадровку по сценам, полный VO-скрипт с таймкодами, компактный shot-лист, чек-лист поставки и комплаенс-оговорки — готов к передаче в продакшн или AI-видеосервис.</div>
     <div>GetCard · Reels 1080×1920 · 30–35 сек</div>
   </footer>
 

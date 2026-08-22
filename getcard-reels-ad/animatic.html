@@ -512,7 +512,7 @@
       <div class="gate" id="playGate">
         <div class="g-logo">G</div>
         <div class="g-title">GetCard — превью Reels</div>
-        <div class="g-sub">1080×1920 · 0:35 · СО ЗВУКОМ</div>
+        <div class="g-sub">1080×1920 · 0:35 · СО ЗВУКОМ И ГОЛОСОМ</div>
         <button class="playbtn" id="playBtn"><span class="tri"></span>Смотреть</button>
       </div>
       <div class="gate" id="replayGate" hidden>
@@ -528,7 +528,7 @@
     <button class="ctrl-btn" id="jumpBtn">⤒ В начало</button>
   </div>
 
-  <footer class="note">Интерактивный аниматик-прототип (v2, режиссёрская доработка), не финальный видеорендер. Звук синтезирован в браузере как референс темпа и динамики.</footer>
+  <footer class="note">Интерактивный аниматик-прототип (v2, режиссёрская доработка), не финальный видеорендер. Звук и голос синтезированы в браузере как референс темпа и динамики — качество и наличие русского голоса зависят от устройства зрителя. Для финального ролика озвучку записывает диктор по VO-скрипту.</footer>
 
 <script>
 (function(){
@@ -564,8 +564,51 @@
   var muteBtn = document.getElementById('muteBtn');
   var jumpBtn = document.getElementById('jumpBtn');
 
+  var VO_LINES = [
+    {start:0.05,  rate:1.12, text:'Пытаетесь оплатить зарубежный сервис —'},
+    {start:1.68,  rate:1.12, text:'и платёж отклонён?'},
+    {start:3.08,  rate:1.1,  text:'Российская карта здесь не подходит.'},
+    {start:5.48,  rate:1.0,  text:'Но решение есть.'},
+    {start:7.08,  rate:1.0,  text:'Это GetCard.'},
+    {start:11.9,  rate:1.0,  text:'Всё просто: выпускаете GetCard — и платите рублями за зарубежные сервисы и подписки, там, где принимают такие карты.'},
+    {start:20.3,  rate:1.0,  text:'Один инструмент — и никаких отказов.'},
+    {start:26.3,  rate:1.0,  text:'Если такая карта нужна и вам — выпустите её на getcard.one.'}
+  ];
+
   var raf = null, startPerf = 0, running = false, lastElapsed = -1;
   var audioCtx = null, audioOn = true;
+  var voTimers = [];
+  var ruVoices = [];
+  function loadVoices(){
+    if (!('speechSynthesis' in window)) return;
+    ruVoices = speechSynthesis.getVoices().filter(function(v){ return /^ru/i.test(v.lang); });
+  }
+  if ('speechSynthesis' in window){
+    loadVoices();
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+  function speakLine(line){
+    if (!audioOn || !('speechSynthesis' in window)) return;
+    var u = new SpeechSynthesisUtterance(line.text);
+    u.lang = 'ru-RU';
+    if (ruVoices[0]) u.voice = ruVoices[0];
+    u.rate = line.rate || 1.0;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    speechSynthesis.speak(u);
+  }
+  function scheduleVO(){
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    VO_LINES.forEach(function(line){
+      voTimers.push(setTimeout(function(){ speakLine(line); }, line.start * 1000));
+    });
+  }
+  function clearVO(){
+    voTimers.forEach(clearTimeout);
+    voTimers = [];
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+  }
 
   function fmt(t){
     var m = Math.floor(t/60), s = Math.floor(t%60);
@@ -634,12 +677,13 @@
 
   function start(){
     resetScenes();
+    clearVO();
     lastElapsed = -1;
     startPerf = performance.now();
     running = true;
     playGate.hidden = true;
     replayGate.hidden = true;
-    if (audioOn) initAudio();
+    if (audioOn){ initAudio(); scheduleVO(); }
     raf = requestAnimationFrame(tick);
   }
 
@@ -648,6 +692,7 @@
   jumpBtn.addEventListener('click', function(){
     if (running){ cancelAnimationFrame(raf); running=false; }
     if (audioCtx){ try{ audioCtx.close(); }catch(e){} audioCtx=null; }
+    clearVO();
     playGate.hidden = false;
     replayGate.hidden = true;
     resetScenes();
@@ -770,7 +815,10 @@
   muteBtn.addEventListener('click', function(){
     audioOn = !audioOn;
     muteBtn.style.opacity = audioOn ? '1' : '.45';
-    if (!audioOn && audioCtx){ try{ audioCtx.close(); }catch(e){} audioCtx=null; }
+    if (!audioOn){
+      if (audioCtx){ try{ audioCtx.close(); }catch(e){} audioCtx=null; }
+      clearVO();
+    }
   });
 
 })();

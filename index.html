@@ -3,58 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <title>Привет Оксана</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   * {
     box-sizing: border-box;
   }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
   body {
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+  }
+  .hero {
+    position: relative;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #a18cd1 100%);
     text-align: center;
+    background-image: url('https://picsum.photos/id/1005/1920/1080');
+    background-size: cover;
+    background-position: center;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%);
+  }
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: 0 1.5rem;
+  }
+  .eyebrow {
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 300;
+    opacity: 0.85;
+    margin-bottom: 1.5rem;
   }
   h1 {
-    font-size: 4.5rem;
-    color: #fff;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    margin: 0 0 1rem;
+    text-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    letter-spacing: 0.02em;
+  }
+  .subtitle {
+    font-weight: 300;
+    font-size: 1.15rem;
+    opacity: 0.9;
+    max-width: 32rem;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
   }
   button {
-    padding: 1rem 2.5rem;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #a18cd1;
-    background: #fff;
-    border: none;
-    border-radius: 50px;
+    padding: 1rem 2.8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #fff;
+    background: transparent;
+    border: 1px solid #fff;
+    border-radius: 2px;
     cursor: pointer;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
   }
   button:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    color: #1a1a1a;
+    transform: translateY(-2px);
   }
   button:active {
-    transform: translateY(0) scale(0.98);
+    transform: translateY(0);
   }
   #message {
-    font-size: 1.4rem;
-    color: #fff;
+    margin-top: 1.8rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
     min-height: 2rem;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  #message.show {
+    opacity: 1;
+  }
+  .signature {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    z-index: 1;
   }
 </style>
 </head>
 <body>
-  <h1>Привет, Оксана</h1>
-  <button onclick="document.getElementById('message').textContent = '✨ Отличного дня, Оксана! ✨'">нажми меня</button>
-  <div id="message"></div>
+  <section class="hero">
+    <div class="content">
+      <div class="eyebrow">Photography &amp; Moments</div>
+      <h1>Привет, Оксана</h1>
+      <p class="subtitle">Каждый кадр — это история. Пусть этот день станет одним из самых тёплых воспоминаний.</p>
+      <button onclick="const m = document.getElementById('message'); m.textContent = '✨ Отличного дня, Оксана! ✨'; m.classList.add('show');">нажми меня</button>
+      <div id="message"></div>
+    </div>
+    <div class="signature">— с любовью, для тебя</div>
+  </section>
 </body>
 </html>

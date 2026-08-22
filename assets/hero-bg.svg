@@ -1,0 +1,44 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="20%" y2="100%">
+      <stop offset="0%" stop-color="#2b1e3d"/>
+      <stop offset="35%" stop-color="#5a3556"/>
+      <stop offset="65%" stop-color="#c96a52"/>
+      <stop offset="100%" stop-color="#f0a868"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd9a0" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffd9a0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff9d6c" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ff9d6c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur1"><feGaussianBlur stdDeviation="35"/></filter>
+    <filter id="blur2"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.03 0"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+
+  <!-- soft bokeh lights, portrait-photography style -->
+  <circle cx="300" cy="820" r="220" fill="url(#glow2)" filter="url(#blur2)"/>
+  <circle cx="1650" cy="260" r="260" fill="url(#glow1)" filter="url(#blur2)"/>
+  <circle cx="960" cy="980" r="180" fill="url(#glow3)" filter="url(#blur1)"/>
+  <circle cx="1450" cy="780" r="120" fill="url(#glow1)" filter="url(#blur1)"/>
+  <circle cx="180" cy="220" r="140" fill="url(#glow3)" filter="url(#blur1)"/>
+  <circle cx="700" cy="150" r="90" fill="url(#glow2)" filter="url(#blur1)"/>
+
+  <!-- subtle vignette -->
+  <rect width="1920" height="1080" fill="black" opacity="0.18"/>
+
+  <!-- film grain texture -->
+  <rect width="1920" height="1080" filter="url(#grain)"/>
+</svg>

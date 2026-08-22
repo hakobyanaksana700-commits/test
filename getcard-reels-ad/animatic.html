@@ -581,7 +581,14 @@
   var ruVoices = [];
   function loadVoices(){
     if (!('speechSynthesis' in window)) return;
-    ruVoices = speechSynthesis.getVoices().filter(function(v){ return /^ru/i.test(v.lang); });
+    var all = speechSynthesis.getVoices().filter(function(v){ return /^ru/i.test(v.lang); });
+    // Prefer network/neural voices (e.g. Chrome's "Google русский") over the
+    // local OS voice — local voices are usually the robotic-sounding ones.
+    all.sort(function(a,b){
+      var score = function(v){ return (v.localService ? 0 : 2) + (/google/i.test(v.name) ? 1 : 0); };
+      return score(b) - score(a);
+    });
+    ruVoices = all;
   }
   if ('speechSynthesis' in window){
     loadVoices();

@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>GetCard — раскадровка Reels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0c0b0d;
+    --bg-2: #131117;
+    --surface: #17151b;
+    --surface-2: #1e1b23;
+    --line: rgba(240,235,225,0.10);
+    --text: #f3efe6;
+    --text-dim: #a89e93;
+    --text-faint: #756c63;
+    --gold: #d8a95c;
+    --gold-soft: rgba(216,169,92,0.16);
+    --amber: #e8823a;
+    --danger: #e2543a;
+    --success: #c9a24a;
+    --font-display: 'Bricolage Grotesque', 'Segoe UI', sans-serif;
+    --font-body: 'Manrope', 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg: #0c0b0d; --bg-2:#131117; --surface:#17151b; --surface-2:#1e1b23;
+      --line: rgba(240,235,225,0.10); --text:#f3efe6; --text-dim:#a89e93; --text-faint:#756c63;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #0c0b0d; --bg-2:#131117; --surface:#17151b; --surface-2:#1e1b23;
+    --line: rgba(240,235,225,0.10); --text:#f3efe6; --text-dim:#a89e93; --text-faint:#756c63;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--gold-soft); color: var(--text); }
+
+  .ambient{
+    position: fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(60vw 60vw at 82% -6%, rgba(216,169,92,0.14), transparent 60%),
+      radial-gradient(50vw 50vw at -10% 30%, rgba(232,130,58,0.10), transparent 60%);
+  }
+
+  .wrap{ position:relative; z-index:1; max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+  /* ---------- Header ---------- */
+  header{ padding: 5rem 0 3rem; text-align:center; }
+  .eyebrow{
+    display:inline-flex; gap:.6em; align-items:center;
+    font-family: var(--font-mono); font-size: .72rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gold);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: .5em 1.1em; background: var(--surface);
+  }
+  h1{
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(2.2rem, 5.4vw, 3.6rem);
+    line-height: 1.08; letter-spacing: -0.01em;
+    margin: 1.1rem auto .9rem; max-width: 18ch;
+    text-wrap: balance;
+  }
+  h1 em{ font-style: normal; color: var(--gold); }
+  header p.lede{
+    max-width: 46ch; margin: 0 auto; color: var(--text-dim);
+    font-size: 1.02rem;
+  }
+
+  .thesis{
+    margin: 2.6rem auto 0; max-width: 640px;
+    display:grid; gap: .85rem;
+    background: linear-gradient(155deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--line); border-radius: 18px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.7);
+  }
+  .thesis .pain{ color: var(--text-dim); font-size: 1.05rem; }
+  .thesis .pain b{ color: var(--text); font-weight:600; }
+  .thesis .solve{
+    font-family: var(--font-display); font-weight: 600; font-size: 1.18rem;
+    color: var(--text);
+  }
+  .thesis .solve b{ color: var(--gold); font-weight: 700; }
+
+  .guardrails{
+    margin: 2.4rem auto 0; max-width: 760px;
+    display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center;
+  }
+  .chip{
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing:.02em;
+    color: var(--text-faint); border: 1px solid var(--line);
+    border-radius: 999px; padding: .4em .85em; background: var(--bg-2);
+  }
+  .chip::before{ content:"— "; color: var(--text-faint); }
+
+  /* ---------- Format strip ---------- */
+  .format{
+    display:flex; justify-content:center; gap: 2.4rem; flex-wrap:wrap;
+    margin: 2.6rem 0 0; padding: 1.1rem 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .format div{ text-align:center; }
+  .format .k{ font-family: var(--font-mono); font-size: .68rem; letter-spacing:.14em; text-transform:uppercase; color: var(--text-faint); }
+  .format .v{ font-family: var(--font-display); font-weight:600; font-size: 1.02rem; margin-top:.15rem; }
+
+  /* ---------- Timeline ---------- */
+  .timeline{ margin: 3.4rem 0 0; }
+  .timeline h2{
+    font-family: var(--font-mono); text-transform:uppercase; letter-spacing:.14em;
+    font-size:.75rem; color: var(--text-faint); font-weight:500; margin: 0 0 .9rem;
+  }
+  .bar{
+    position:relative; display:flex; height: 46px; border-radius: 10px; overflow:hidden;
+    border: 1px solid var(--line);
+  }
+  .bar span{
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-mono); font-size: .68rem; color: var(--text-dim);
+    border-right: 1px solid var(--line);
+  }
+  .bar span:last-child{ border-right:none; }
+  .bar .s1{ width: 11.5%; background: linear-gradient(180deg, rgba(226,84,58,0.22), rgba(226,84,58,0.06)); color:#f0b7ab;}
+  .bar .s2{ width: 14.5%; background: linear-gradient(180deg, rgba(226,84,58,0.12), transparent); }
+  .bar .s3{ width: 11.5%; background: linear-gradient(180deg, rgba(216,169,92,0.30), rgba(216,169,92,0.08)); color:#f0d9ac; }
+  .bar .s4{ width: 26%; background: linear-gradient(180deg, rgba(216,169,92,0.16), transparent); }
+  .bar .s5{ width: 17%; background: linear-gradient(180deg, rgba(216,169,92,0.20), transparent); }
+  .bar .s6{ width: 19.5%; background: linear-gradient(180deg, rgba(216,169,92,0.30), rgba(232,130,58,0.10)); color:#f0d9ac; }
+
+  /* ---------- Scenes ---------- */
+  .scenes{ margin-top: 4rem; display:grid; gap: 3rem; }
+  .scene{
+    display:grid; grid-template-columns: 220px 1fr; gap: 2.2rem;
+    padding-top: 2.6rem; border-top: 1px solid var(--line);
+  }
+  .scene:first-child{ border-top:1px solid var(--line); }
+
+  .scene-head{ display:flex; flex-direction:column; gap: .9rem; }
+  .scene-no{ font-family: var(--font-mono); color: var(--text-faint); font-size: .78rem; }
+  .scene-time{ font-family: var(--font-mono); font-size: 1.5rem; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .scene-title{ font-family: var(--font-display); font-weight:700; font-size: 1.15rem; text-wrap: balance; }
+
+  /* phone mock */
+  .phone{
+    width: 150px; aspect-ratio: 9/16; border-radius: 20px;
+    background: #050506; border: 3px solid #2a2620; position:relative; overflow:hidden;
+    box-shadow: 0 20px 40px -18px rgba(0,0,0,0.8);
+  }
+  .phone .screen{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: .7rem; text-align:center; gap:.35rem; }
+  .phone .label{ font-family: var(--font-mono); font-size: .5rem; letter-spacing:.06em; color: var(--text-dim); text-transform:uppercase; }
+  .phone .big{ font-family: var(--font-display); font-weight:700; font-size:.72rem; color: var(--text); line-height:1.2; }
+
+  /* scene 1 mock */
+  .mock-decline{ background: radial-gradient(120% 90% at 50% 0%, rgba(226,84,58,0.28), #0a0709 60%); }
+  .mock-decline .badge{ background: rgba(226,84,58,0.16); border:1px solid rgba(226,84,58,0.5); color:#f2a493; font-family: var(--font-mono); font-size:.52rem; padding:.3em .6em; border-radius: 6px; letter-spacing:.04em; }
+
+  /* scene 2 mock: montage strip */
+  .mock-montage{ background: #0a0910; padding:0; }
+  .mock-montage .strip{ position:absolute; inset:0; display:grid; grid-template-rows: repeat(3,1fr); }
+  .mock-montage .strip div{ border-bottom: 1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.5rem; color: var(--text-dim); }
+  .mock-montage .strip div:nth-child(1){ background: rgba(216,169,92,0.05); }
+  .mock-montage .strip div:nth-child(2){ background: rgba(226,84,58,0.07); }
+  .mock-montage .strip div:nth-child(3){ background: rgba(216,169,92,0.05); }
+
+  /* scene 3 mock: card reveal */
+  .mock-card{ background: radial-gradient(90% 70% at 50% 40%, rgba(216,169,92,0.16), #08070a 70%); }
+  .card-mini{ width: 88px; aspect-ratio: 1.586; border-radius: 8px; background: linear-gradient(135deg,#1a1712,#0c0a08 55%, #3a2f1c); border: 1px solid rgba(216,169,92,0.4); position:relative; box-shadow: 0 0 24px rgba(216,169,92,0.25); }
+  .card-mini::after{ content:"G"; position:absolute; left:8px; top:6px; font-family: var(--font-display); font-weight:800; font-size: .9rem; color: var(--gold); }
+  .card-mini::before{ content:""; position:absolute; right:8px; bottom:6px; width: 16px; height:16px; border-radius:50%; background: radial-gradient(circle, var(--amber), transparent 70%); opacity:.8; }
+
+  /* scene 4 mock: flow */
+  .mock-flow .flow{ display:flex; flex-direction:column; align-items:center; gap:.3rem; }
+  .flow-step{ font-family: var(--font-mono); font-size:.52rem; color: var(--text-dim); border:1px solid var(--line); border-radius:5px; padding:.25em .55em; background: var(--bg-2); }
+  .flow-arrow{ color: var(--text-faint); font-size:.6rem; }
+
+  /* scene 5 mock: quick cuts */
+  .mock-quick{ background: #0b0a0d; }
+  .mock-quick .grid5{ position:absolute; inset:0; display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap:1px; background: rgba(255,255,255,0.05); }
+  .mock-quick .grid5 div{ background: #0f0d11; }
+  .mock-quick .grid5 div:nth-child(1){ background: rgba(216,169,92,0.10); }
+  .mock-quick .grid5 div:nth-child(4){ background: rgba(232,130,58,0.08); }
+
+  /* scene 6 mock: final lockup */
+  .mock-final{ background: radial-gradient(100% 80% at 50% 45%, rgba(216,169,92,0.20), #08070a 72%); }
+  .mock-final .cta{ font-family: var(--font-mono); font-size:.5rem; letter-spacing:.08em; color:#0c0b0d; background: var(--gold); border-radius: 999px; padding:.3em .7em; }
+
+  .scene-body{ display:flex; gap: 1.6rem; }
+  .scene-media{ flex: none; }
+  .scene-copy{ flex:1; min-width:0; display:flex; flex-direction:column; gap: 1.1rem; }
+
+  .onscreen{
+    font-family: var(--font-display); font-weight:700; font-size:1.3rem;
+    color: var(--text); text-wrap: balance;
+  }
+  .onscreen .hl{ color: var(--gold); }
+  .onscreen .hl2{ color: var(--amber); }
+
+  .meta{ display:grid; grid-template-columns: 1fr 1fr; gap: .9rem 1.6rem; }
+  .meta .row{ display:grid; gap:.3rem; }
+  .meta .k{ font-family: var(--font-mono); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color: var(--text-faint); }
+  .meta .v{ font-size:.92rem; color: var(--text-dim); line-height:1.5; }
+  .meta .row.full{ grid-column: 1 / -1; }
+  .meta .v b{ color: var(--text); font-weight:600; }
+
+  @media (max-width: 720px){
+    .scene{ grid-template-columns: 1fr; }
+    .scene-head{ flex-direction:row; align-items:center; }
+    .scene-body{ flex-direction:column; }
+    .meta{ grid-template-columns: 1fr; }
+    .phone{ width: 120px; }
+  }
+
+  /* ---------- Footer sections ---------- */
+  .panels{ margin-top: 4.5rem; display:grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+  @media (max-width: 720px){ .panels{ grid-template-columns: 1fr; } }
+  .panel{
+    background: var(--surface); border:1px solid var(--line); border-radius: 16px;
+    padding: 1.6rem 1.8rem;
+  }
+  .panel h3{
+    font-family: var(--font-display); font-size: 1.02rem; margin: 0 0 .9rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .panel h3::before{ content:""; width:6px; height:6px; border-radius:50%; background: var(--gold); }
+  .panel p, .panel li{ color: var(--text-dim); font-size: .88rem; line-height:1.6; }
+  .panel ul{ margin:0; padding-left: 1.1rem; display:grid; gap:.4rem; }
+  .subtitle-demo{
+    font-family: var(--font-display); font-weight:700; font-size:1.05rem; text-align:center;
+    background: #0a090c; border:1px solid var(--line); border-radius:10px; padding: 1rem; margin-top:.8rem;
+  }
+  .subtitle-demo .hl{ color: var(--gold); }
+  .subtitle-demo .hl2{ color: var(--amber); }
+
+  footer{ margin-top: 4rem; text-align:center; color: var(--text-faint); font-size:.82rem; }
+  footer .note{
+    max-width: 560px; margin: 0 auto 1rem; padding: 1rem 1.3rem;
+    border: 1px dashed var(--line); border-radius: 12px; font-family: var(--font-mono); font-size: .74rem; color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Reels / TikTok / Shorts · раскадровка</span>
+    <h1>Отказ платежа как <em>завязка</em> истории</h1>
+    <p class="lede">Полная покадровая раскадровка рекламного ролика GetCard — для утверждения перед продакшеном.</p>
+
+    <div class="thesis">
+      <div class="pain">Боль: <b>«не проходит оплата зарубежного сервиса»</b></div>
+      <div class="solve"><b>GetCard</b> — иностранная карта для оплаты зарубежных сервисов.</div>
+    </div>
+
+    <div class="guardrails">
+      <span class="chip">без «обхода блокировок / санкций / ограничений»</span>
+      <span class="chip">без «гарантированно работает везде»</span>
+      <span class="chip">про решение проблемы оплаты, не про обход правил</span>
+      <span class="chip">никаких чужих логотипов и реальных реквизитов</span>
+    </div>
+
+    <div class="format">
+      <div><div class="k">Формат</div><div class="v">1080 × 1920 · 9:16</div></div>
+      <div><div class="k">Хронометраж</div><div class="v">30–35 сек</div></div>
+      <div><div class="k">Темп музыки</div><div class="v">110–120 BPM</div></div>
+      <div><div class="k">Язык</div><div class="v">Русский VO + субтитры</div></div>
+    </div>
+  </header>
+
+  <section class="timeline">
+    <h2>Драматургия по секундам</h2>
+    <div class="bar">
+      <span class="s1">0–4</span>
+      <span class="s2">4–9</span>
+      <span class="s3">9–13</span>
+      <span class="s4">13–22</span>
+      <span class="s5">22–28</span>
+      <span class="s6">28–35</span>
+    </div>
+  </section>
+
+  <section class="scenes">
+
+    <!-- SCENE 1 -->
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">Сцена 01 / 06</div>
+        <div class="scene-time">0:00–0:04</div>
+        <div class="scene-title">Отказ</div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-media">
+          <div class="phone mock-decline"><div class="screen">
+            <div class="label">payment</div>
+            <div class="badge">Оплата не прошла</div>
+            <div class="big">Снова не проходит оплата?</div>
+          </div></div>
+        </div>
+        <div class="scene-copy">
+          <div class="onscreen">«<span class="hl">Снова не проходит</span> оплата?»</div>
+          <div class="meta">
+            <div class="row full"><div class="k">Визуал</div><div class="v">Чёрный экран → форма оплаты обобщённого зарубежного сервиса (без реальных логотипов). Крупный план: вводится номер карты, палец нажимает «Оплатить». Пауза. Экран окрашивается в тревожный красный, всплывает баннер отказа. Первые кадры — максимально цепляющие, без раскачки.</div></div>
+            <div class="row"><div class="k">Озвучка</div><div class="v">«Пытались оплатить зарубежный сервис российской картой — и снова отказ?»</div></div>
+            <div class="row"><div class="k">Музыка</div><div class="v">Минималистичный низкий пульсирующий бас, редкие «тик»-перкуссии, нарастающее напряжение.</div></div>
+            <div class="row"><div class="k">Звук. эффекты</div><div class="v">Короткий error-buzz на баннере отказа; лёгкий цифровой глитч экрана.</div></div>
+            <div class="row"><div class="k">Переход</div><div class="v">Жёсткий cut на красной вспышке — сразу в монтаж сцены 2.</div></div>
+          </div>
+          <div class="meta">
+            <div class="row full"><div class="k">Анимация</div><div class="v">Быстрый zoom-in на баннер «Оплата не прошла»; текст выезжает с лёгкой тряской (shake), имитируя раздражение.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SCENE 2 -->
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">Сцена 02 / 06</div>
+        <div class="scene-time">0:04–0:09</div>
+        <div class="scene-title">Знакомая ситуация</div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-media">
+          <div class="phone mock-montage"><div class="strip"><div>ноутбук</div><div>смартфон</div><div>отказ</div></div></div>
+        </div>
+        <div class="scene-copy">
+          <div class="onscreen">«Подписка. Сервис. <span class="hl2">Онлайн-покупка.</span>»</div>
+          <div class="meta">
+            <div class="row full"><div class="k">Визуал</div><div class="v">Быстрый динамичный монтаж: экран ноутбука с формой подписки → смартфон с той же ошибкой → рука раздражённо откладывает телефон → крутящийся индикатор загрузки, обрывающийся ошибкой. Интерфейсы обобщённые, без сторонних брендов.</div></div>
+            <div class="row"><div class="k">Озвучка</div><div class="v">«Знакомая ситуация: сервис нужен, а оплатить его российской картой не получается.»</div></div>
+            <div class="row"><div class="k">Музыка</div><div class="v">Тот же напряжённый минимал-бит, ритмичные акценты синхронно со сменой кадров, темп начинает нарастать.</div></div>
+            <div class="row"><div class="k">Звук. эффекты</div><div class="v">Digital-click на каждой склейке, приглушённое эхо error-звука из сцены 1.</div></div>
+            <div class="row"><div class="k">Переход</div><div class="v">Серия быстрых jump-cuts (0.3–0.5 с), последний кадр — уход в чёрное.</div></div>
+          </div>
+          <div class="meta">
+            <div class="row full"><div class="k">Анимация</div><div class="v">Слова «Подписка / Сервис / Онлайн-покупка» влетают snap-in синхронно с кадром, лёгкий motion blur на склейках.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SCENE 3 -->
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">Сцена 03 / 06</div>
+        <div class="scene-time">0:09–0:13</div>
+        <div class="scene-title">Появление GetCard</div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-media">
+          <div class="phone mock-card"><div class="screen"><div class="card-mini"></div><div class="label" style="margin-top:.5rem">getcard</div></div></div>
+        </div>
+        <div class="scene-copy">
+          <div class="onscreen">«Есть решение. <span class="hl">GETCARD</span>.»</div>
+          <div class="meta">
+            <div class="row full"><div class="k">Визуал</div><div class="v">Резкая смена атмосферы: экран уходит в тёмный минимализм, из глубины медленно проявляется объёмная 3D-карта GetCard — чёрный графит, золотая насечка «G», тонкое золотое свечение по контуру. Камера мягко приближается, лёгкий параллакс-поворот карты.</div></div>
+            <div class="row"><div class="k">Озвучка</div><div class="v">«Но есть решение — GetCard.»</div></div>
+            <div class="row"><div class="k">Музыка</div><div class="v">Эффектный bass-drop точно на появлении карты, дальше — уверенный тёплый synth-pad, темп стабилизируется на 110–116 BPM.</div></div>
+            <div class="row"><div class="k">Звук. эффекты</div><div class="v">Premium bass hit + мягкий металлический shimmer/chime в момент появления карты.</div></div>
+            <div class="row"><div class="k">Переход</div><div class="v">Плавный cross-dissolve из черноты — без резких склеек, монтаж с этого момента становится премиальным и спокойным.</div></div>
+          </div>
+          <div class="meta">
+            <div class="row full"><div class="k">Анимация</div><div class="v">Карта rotate-in с лёгким bloom-свечением по кромке; надпись «GETCARD» проявляется с эффектом раздвигающегося трекинга букв.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SCENE 4 -->
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">Сцена 04 / 06</div>
+        <div class="scene-time">0:13–0:22</div>
+        <div class="scene-title">Как это работает</div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-media">
+          <div class="phone mock-flow"><div class="screen"><div class="flow">
+            <div class="flow-step">₽ РУБЛИ</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">GETCARD</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">СЕРВИС</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">ОПЛАТА</div>
+          </div></div></div>
+        </div>
+        <div class="scene-copy">
+          <div class="onscreen">Рубли → <span class="hl">GetCard</span> → зарубежный сервис → оплата</div>
+          <div class="meta">
+            <div class="row full"><div class="k">Визуал</div><div class="v">Чистая motion-схема из четырёх шагов, выстроенная по вертикали в фирменных цветах. Далее — кадры смартфона и ноутбука с современными обобщёнными интерфейсами онлайн-сервисов, карта GetCard в мобильном кошельке. Без чужих логотипов.</div></div>
+            <div class="row"><div class="k">Озвучка</div><div class="v">«GetCard — иностранная карта, которую можно использовать для оплаты зарубежных сервисов там, где принимаются такие карты.»</div></div>
+            <div class="row"><div class="k">Музыка</div><div class="v">Ровный уверенный бит 112 BPM, поверх баса вступает мелодичный synth-лид — ощущение движения и надёжности.</div></div>
+            <div class="row"><div class="k">Звук. эффекты</div><div class="v">Лёгкие digital-clicks на каждом шаге схемы, мягкий success-chime на финальной галочке «Оплата прошла».</div></div>
+            <div class="row"><div class="k">Переход</div><div class="v">Плавные whoosh-переходы между шагами схемы и кадрами устройств.</div></div>
+          </div>
+          <div class="meta">
+            <div class="row full"><div class="k">Анимация</div><div class="v">Схема «дорисовывается» линиями по ходу озвучки; иконки масштабируются с лёгким bounce; экраны устройств показаны в 3D-перспективе с бликом на стекле.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SCENE 5 -->
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">Сцена 05 / 06</div>
+        <div class="scene-time">0:22–0:28</div>
+        <div class="scene-title">Один инструмент</div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-media">
+          <div class="phone mock-quick"><div class="grid5"><div></div><div></div><div></div><div></div></div></div>
+        </div>
+        <div class="scene-copy">
+          <div class="onscreen">«Сервисы. Подписки. <span class="hl2">Онлайн-покупки.</span>»</div>
+          <div class="meta">
+            <div class="row full"><div class="k">Визуал</div><div class="v">Premium-монтаж короткими планами: карта GetCard крупным планом в руке → смартфон с открытым сервисом → ноутбук с формой оплаты → жест подтверждения покупки одним касанием.</div></div>
+            <div class="row"><div class="k">Озвучка</div><div class="v">«Один инструмент для зарубежных онлайн-платежей.»</div></div>
+            <div class="row"><div class="k">Музыка</div><div class="v">Пик энергии трека: устойчивый бит плюс лёгкий synth-арпеджио поверх.</div></div>
+            <div class="row"><div class="k">Звук. эффекты</div><div class="v">Серия мягких whoosh + digital-click на каждой смене плана, лёгкий «tap» на подтверждении оплаты.</div></div>
+            <div class="row"><div class="k">Переход</div><div class="v">Быстрые, но гладкие cuts с едва заметным motion blur — премиальный ритм, не рваный монтаж.</div></div>
+          </div>
+          <div class="meta">
+            <div class="row full"><div class="k">Анимация</div><div class="v">Лёгкое параллакс-движение камеры в каждом плане; слова выезжают снизу с тонким золотым подчёркиванием.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SCENE 6 -->
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">Сцена 06 / 06</div>
+        <div class="scene-time">0:28–0:35</div>
+        <div class="scene-title">Финальный лок-ап</div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-media">
+          <div class="phone mock-final"><div class="screen">
+            <div class="card-mini" style="width:64px; margin-bottom:.4rem;"></div>
+            <div class="big">GETCARD</div>
+            <div class="label">иностранная карта для зарубежных платежей</div>
+            <div class="cta">Подробнее →</div>
+          </div></div>
+        </div>
+        <div class="scene-copy">
+          <div class="onscreen"><span class="hl">GETCARD</span> — иностранная карта для зарубежных платежей</div>
+          <div class="meta">
+            <div class="row full"><div class="k">Визуал</div><div class="v">Чёрный графитовый фон, карта GetCard в центре кадра медленно вращается на 360°, мягкое золотое свечение позади, едва заметные частицы на фоне (без перегруза).</div></div>
+            <div class="row"><div class="k">Озвучка</div><div class="v">«Если вам нужна иностранная карта для зарубежных платежей — узнайте подробнее о GetCard.»</div></div>
+            <div class="row"><div class="k">Музыка</div><div class="v">Финальный уверенный технологичный аккорд, бит стихает, остаётся тёплый sustained pad.</div></div>
+            <div class="row"><div class="k">Звук. эффекты</div><div class="v">Мягкий shimmer на появлении логотипа, тихий UI-hover click на кнопке «Подробнее».</div></div>
+            <div class="row"><div class="k">Переход</div><div class="v">Финальный кадр удерживается до конца ролика, лёгкий fade на лого-локапе.</div></div>
+          </div>
+          <div class="meta">
+            <div class="row full"><div class="k">Анимация</div><div class="v">Непрерывное медленное вращение карты (loop-ощущение); текст проявляется fade+rise; кнопка «Подробнее» — едва заметное дыхание свечения (CTA-пульс).</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="panels">
+    <div class="panel">
+      <h3>Голос и озвучка</h3>
+      <ul>
+        <li>Русский язык, современный уверенный тембр — не диктор новостей.</li>
+        <li>Тон не агрессивный: человек делится удобной находкой, а не продаёт «в лоб».</li>
+        <li>Темп речи спокойный до сцены 3, чуть увереннее и энергичнее после появления GetCard.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Субтитры</h3>
+      <p>Крупный белый текст, ключевые слова — золотым/оранжевым. Не более одной смысловой фразы на экране одновременно.</p>
+      <div class="subtitle-demo">Снова <span class="hl">НЕ ПРОХОДИТ</span> оплата <span class="hl2">ЗАРУБЕЖНОГО СЕРВИСА</span>?</div>
+    </div>
+    <div class="panel">
+      <h3>Музыкальная драматургия</h3>
+      <ul>
+        <li><b style="color:var(--text)">0–9с</b> — минималистичное напряжение, низкий пульс, редкая перкуссия.</li>
+        <li><b style="color:var(--text)">9с</b> — premium bass-drop на появлении карты.</li>
+        <li><b style="color:var(--text)">9–28с</b> — уверенный ровный бит 110–120 BPM, мелодичный лид поверх.</li>
+        <li><b style="color:var(--text)">28–35с</b> — технологичный outro-аккорд, бит стихает.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Визуальные принципы</h3>
+      <ul>
+        <li>Графит + чёрный фон, золото и оранжевое свечение — единственные акцентные цвета.</li>
+        <li>Карта GetCard — главный визуальный герой во всех премиальных сценах.</li>
+        <li>Cinematic camera moves, macro-планы карты, мягкие рефлексы, глубина резкости.</li>
+        <li>Без мультяшности, кислотных цветов, дешёвых шаблонов и перегруженного UI.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <div class="note">Раскадровка описывает визуал, текст, озвучку, музыку, звук, переход и анимацию для каждой сцены — готова к согласованию перед продакшеном.</div>
+    <div>GetCard · Reels 1080×1920 · 30–35 сек</div>
+  </footer>
+
+</div>
+</body>
+</html>

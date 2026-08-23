@@ -359,6 +359,18 @@
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
   }
+
+  /* ---------- capture mode: raw 1080x1920 creative only, no preview chrome ---------- */
+  body.capture{
+    display:block; padding:0; margin:0; background: var(--frame-bg); background-image:none;
+  }
+  body.capture .eyebrow, body.capture .controls, body.capture footer.note,
+  body.capture .hud-top, body.capture .hud-bottom, body.capture .mute-btn, body.capture .gate{
+    display:none !important;
+  }
+  body.capture .phone{
+    width:1080px; height:1920px; border-radius:0; box-shadow:none;
+  }
 </style>
 </head>
 <body>
@@ -827,6 +839,73 @@
       clearVO();
     }
   });
+
+  /* ---------- capture mode: deterministic frame-by-frame render ----------
+     Instead of playing in real time (which a screen recording would have
+     to re-time and re-align afterwards), the render script calls
+     window.__renderFrame(t) once per output frame with an exact timestamp
+     and screenshots the result — so the exported video's timing is exact
+     by construction, independent of screenshot/IO latency. */
+  if (/[?&]capture=1/.test(location.search)){
+    document.body.classList.add('capture');
+    audioOn = false; // audio/VO are rendered and muxed separately for the export
+
+    window.__renderFrame = function(tSec){
+      SCENES.forEach(function(s){
+        var el = sceneEls[s.cls];
+        el.classList.toggle('active', tSec >= s.start && tSec < s.end);
+      });
+
+      document.querySelectorAll('.scene.active').forEach(function(sceneEl){
+        var meta = SCENES.filter(function(x){ return sceneEls[x.cls] === sceneEl; })[0];
+        if (!meta) return;
+        var localMs = (tSec - meta.start) * 1000;
+        var nodes = [sceneEl].concat(Array.prototype.slice.call(sceneEl.querySelectorAll('*')));
+        nodes.forEach(function(el){
+          el.getAnimations().forEach(function(anim){
+            try { anim.pause(); anim.currentTime = localMs; } catch(e){}
+          });
+        });
+      });
+
+      var flashT = null, gold = false;
+      if (tSec >= 1.6 && tSec < 1.9){ flashT = tSec - 1.6; gold = false; }
+      if (tSec >= 7.0 && tSec < 7.3){ flashT = tSec - 7.0; gold = true; }
+      var op = 0;
+      if (flashT !== null){
+        var p = flashT / 0.28;
+        op = p <= 0.2 ? (p / 0.2) * 0.8 : 0.8 * (1 - (p - 0.2) / 0.8);
+        op = Math.max(0, Math.min(0.85, op));
+      }
+      flashEl.classList.toggle('gold', gold);
+      flashEl.style.transition = 'none';
+      flashEl.style.opacity = String(op);
+
+      var capMatch = null;
+      for (var j = 0; j < CAPTIONS.length; j++){
+        var c = CAPTIONS[j];
+        if (tSec >= c.start && tSec < c.end){ capMatch = c; break; }
+      }
+      capEl.style.transition = 'none';
+      if (capMatch){
+        if (capEl.dataset.k !== capMatch.start + ''){
+          capEl.innerHTML = capMatch.html;
+          capEl.dataset.k = capMatch.start + '';
+        }
+        var fadeIn = Math.min(1, (tSec - capMatch.start) / 0.3);
+        var fadeOut = Math.min(1, (capMatch.end - tSec) / 0.3);
+        capEl.style.opacity = String(Math.max(0, Math.min(fadeIn, fadeOut)));
+      } else {
+        capEl.style.opacity = '0';
+      }
+    };
+
+    if (document.fonts && document.fonts.ready){
+      document.fonts.ready.then(function(){ window.__captureReady = true; });
+    } else {
+      window.__captureReady = true;
+    }
+  }
 
 })();
 </script>

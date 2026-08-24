@@ -1,0 +1,23 @@
+{
+  "name": "getcard-reels",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GetCard vertical advertising video (Instagram Reels) built with Remotion",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render GetCardReels out/getcard-reels.mp4",
+    "still": "remotion still",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.516",
+    "@remotion/cli": "^4.0.516"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.5.4"
+  }
+}

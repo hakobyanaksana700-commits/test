@@ -1,8 +1,77 @@
-# GetCard.one — Instagram Reels (9:16, 15 сек)
+# GetCard.one — Instagram Reels (9:16)
 
 Сценарий и раскадровка ролика о платёжной системе GetCard.one. Стиль — премиальная
 финтех-реклама: прозрачная стеклянная карта с логотипом GetCard, ночной город,
 холодно-тёплая (синий/оранжевый) цветокоррекция — по образцу приложенного референс-изображения.
+
+## Версия 2 (12 сек) — актуальная
+
+Сокращённая версия с учётом пожеланий из переписки:
+- Весь текст в кадре — на русском языке и кириллицей, **кроме** бренд-названия/домена
+  «GetCard.one» и логотипа Mastercard — они намеренно оставлены латиницей (это товарные
+  знаки/домен, их не переводят).
+- В сцене «Хук» используются узнаваемые иконки популярных зарубежных сервисов (ChatGPT,
+  Google, Apple, Alipay, облачный сервис) — по образцу кадра, который прислал пользователь.
+- 4 сцены по 3 секунды (сцены «Проблема» и «Решение» объединены в одну непрерывную сцену
+  «отскок → пробитие барьера»), чтобы уложиться в 12 секунд.
+
+| # | Тайминг | Сцена | Описание |
+|---|---------|-------|----------|
+| 1 | 0–3с | **Хук** | Крупный план: человек ночью расстроенно смотрит в телефон. На экране — красный значок отказа платежа и надпись «ПЛАТЁЖ ОТКЛОНЁН», два QR-кода, под ними ряд иконок сервисов (ChatGPT, Google, Apple, Alipay, облако). |
+| 2 | 3–6с | **Барьер** (проблема + решение одной сценой) | Карта сначала отскакивает от светящегося глобуса с красным силовым барьером, иконки сервисов вокруг гаснут красным — затем появляется карта GetCard и с разгона пробивает барьер, он рассыпается на частицы света, иконки один за другим загораются зелёным. |
+| 3 | 6–9с | **Пополнение через СБП** | Экран телефона: иконка молнии/QR и надпись «СБП», мгновенный перевод на баланс карты GetCard, счётчик «БАЛАНС» быстро растёт. |
+| 4 | 9–12с | **CTA** | Карта плавно вращается на ярком градиентном (оранжево-синем) фоне, над ней проявляется лого «GetCard.one» (латиницей), палец нажимает на пульсирующую кнопку «ОФОРМИТЬ КАРТУ». |
+
+### Промпты для генерации (v2, для воспроизводимости)
+
+**Общий сюжет:** A 12-second vertical Instagram Reel ad for the GetCard.one international
+payment card, all on-screen narrative text in Russian Cyrillic except the "GetCard.one"
+brand wordmark and the Mastercard logo which stay in Latin letters: a person's card gets
+declined on foreign services at night, the card bounces off then smashes through a glowing
+barrier that symbolizes cards not working abroad, instant SBP top-up fills the balance,
+ending with the card rotating beside the GetCard.one logo and a Russian call-to-action
+button "ОФОРМИТЬ КАРТУ". Premium fintech advertising style, glass/holographic card
+aesthetic, cinematic blue-orange lighting, consistent with the reference GetCard glass
+card design.
+
+1. **Хук (0–3с):** Vertical 9:16 cinematic close-up at night: a young man's face lit only
+   by his smartphone screen glow, frustrated and disappointed expression, dim room with a
+   blurred city skyline through the window behind him. The phone screen shows a checkout
+   page with a red circular decline icon and bold Russian text "ПЛАТЁЖ ОТКЛОНЁН", two small
+   QR codes, and below them a row of recognizable service icons (ChatGPT, Google, Apple,
+   Alipay, a cloud service) shown dimmed/red. Slow push-in camera, moody blue-toned
+   lighting, shallow depth of field. All on-screen text in Russian Cyrillic.
+2. **Барьер (3–6с):** Vertical 9:16 dark tech background: a glossy translucent bank card
+   flies forward and bounces off a large glowing digital globe wrapped in red barrier arcs;
+   surrounding service icons flicker red — then the transparent GetCard glass card glides
+   forward with glowing motion trails and smashes directly through the barrier, which
+   shatters into thousands of light particles; as they clear, the service icons light up
+   green one by one. Camera orbits smoothly around the card, dynamic light flares, deep
+   blue background with warm golden highlights. Keep the GetCard wordmark and Mastercard
+   logo on the card exactly as in the reference image; no other Latin text anywhere.
+3. **Пополнение СБП (6–9с):** Vertical 9:16 close-up of a smartphone screen: clean modern
+   banking app UI with blue/orange gradient accents, a glowing lightning-bolt/QR icon next
+   to bold Russian label "СБП" pulses an instant transfer, then a balance counter rapidly
+   increases beside the Russian word "БАЛАНС" with smooth rolling digit animation and light
+   particle bursts. A small transparent GetCard icon sits at the top of the screen. All
+   words on screen in Russian Cyrillic except the GetCard brand name.
+4. **CTA (9–12с):** Vertical 9:16 studio shot: the transparent GetCard glass card slowly
+   rotates against a bright gradient background transitioning from deep orange to blue,
+   catching cinematic light reflections. Above the card the "GetCard.one" logo (orange-red
+   gradient G icon + white wordmark, kept in Latin letters as the brand/domain name) fades
+   in and glows softly. Below, a finger taps a pulsing glowing button with bold Russian text
+   "ОФОРМИТЬ КАРТУ", ripple light effect on tap, warm inviting final mood.
+
+### Примечание по тайминг-разбивке
+Инструменты генерации видео (Runway Multi-Shot) поддерживают фиксированные общие
+длительности — 5, 10 или 15 секунд, а не произвольные 12. При фактической генерации этого
+сценария длительность будет округлена до ближайшей поддерживаемой (например, 10 секунд с
+пропорционально сжатыми сценами), либо собрана из отдельных клипов вручную — сценарий и
+тайминги выше описывают целевую 12-секундную версию по смыслу и порядку сцен.
+
+---
+
+## Версия 1 (15 сек, архив)
 
 ## Референс дизайна
 Стеклянная карта GetCard с логотипом Mastercard, парящая над ночным городом (в стиле
